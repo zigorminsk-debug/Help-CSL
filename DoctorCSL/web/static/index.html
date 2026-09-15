@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Help CSL</title>
+  <link rel="icon" type="image/png" href="/assets/icon.png">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div class="app">
+    <nav class="menubar" aria-label="Главное меню">
+      <div class="menu" id="menu-service">
+        <button type="button" class="menu-btn">Сервис</button>
+        <div class="dropdown">
+          <button type="button" data-act="submit">Отправить заявку</button>
+          <button type="button" data-act="edit">Редактировать заявку</button>
+          <button type="button" data-act="history">История запросов</button>
+          <hr>
+          <a href="https://h.csl.by/servicedesk/customer/portals" target="_blank" rel="noopener">Открыть портал Service Desk</a>
+          <a href="https://csl.by" target="_blank" rel="noopener">Сайт CSL.by</a>
+          <hr>
+          <button type="button" data-act="exit">Выход</button>
+        </div>
+      </div>
+      <div class="menu" id="menu-help">
+        <button type="button" class="menu-btn">Справка</button>
+        <div class="dropdown">
+          <button type="button" data-act="contacts">Контакты</button>
+          <button type="button" data-act="holiday">Предпросмотр: Дед Мороз</button>
+          <button type="button" data-act="replay">Предпросмотр: ускоренная поездка</button>
+          <button type="button" data-act="normal">Обычная сцена</button>
+          <button type="button" data-act="about">О программе</button>
+          <hr>
+          <a href="/download/HelpCSL-web.zip">Скачать веб-версию (ZIP)</a>
+        </div>
+      </div>
+    </nav>
+
+    <header class="header">
+      <img class="logo" src="/assets/icon.png" width="52" height="52" alt="">
+      <div class="titles">
+        <a class="app-name csl-link" href="https://csl.by" target="_blank" rel="noopener">HELP CSL</a>
+        <a class="slogan csl-link" href="https://csl.by" target="_blank" rel="noopener">Help CSL уже в пути</a>
+      </div>
+      <div class="header-actions">
+        <button type="button" class="btn" data-act="submit">Отправить заявку</button>
+        <button type="button" class="btn" data-act="edit">Редактировать</button>
+        <button type="button" class="btn" data-act="history">История</button>
+        <div id="ticket-timers" class="ticket-timers" title="Счётчики заявки">
+          <div class="tcol"><span class="tcap">Старт</span><span id="timer-start" class="ticket-timer">—</span></div>
+          <div class="tcol"><span class="tcap">Смена</span><span id="timer-change" class="ticket-timer change">—</span></div>
+          <div class="tcol"><span class="tcap">Готово</span><span id="timer-ready" class="ticket-timer ready">—</span></div>
+        </div>
+      </div>
+      <div id="hours-banner" class="hours-banner">Загрузка…</div>
+      <div class="meta">
+        <a class="phone" href="tel:+375293761095">☎  +375 29 376-10-95</a>
+        <span class="meta-hours">заявки 09:00–17:30  ·  пн–пт</span>
+      </div>
+    </header>
+    <div class="stripe"></div>
+    <canvas id="scene" height="200" aria-label="Сцена Help CSL"></canvas>
+
+    <section class="cred card" id="cred">
+      <h2 id="cred-title">Учётные данные портала  h.csl.by</h2>
+      <div class="cred-grid">
+        <label id="box-login">Логин
+          <input id="login" autocomplete="username" spellcheck="false">
+        </label>
+        <label id="box-password">Пароль
+          <input id="password" type="password" autocomplete="current-password">
+        </label>
+        <label id="box-phone">Мобильный (+международный)
+          <input id="phone" value="+375" inputmode="tel" autocomplete="tel" maxlength="16" spellcheck="false">
+          <small id="phone-hint" class="hint">Пример: +375293761095  ·  ровно 12 цифр после +</small>
+        </label>
+        <label id="box-anydesk">AnyDesk ID
+          <input id="anydesk" spellcheck="false" placeholder="если есть">
+        </label>
+        <label id="box-rustdesk">RustDesk ID
+          <input id="rustdesk" spellcheck="false" placeholder="если есть">
+        </label>
+      </div>
+      <div class="cred-actions">
+        <button type="button" class="btn" id="login-btn">Войти в Service Desk</button>
+        <span id="status" class="status">Вход не выполнен</span>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <div class="tabbar" role="tablist">
+        <button type="button" class="tab on" data-tab="computer" role="tab">1  ·  Компьютер</button>
+        <button type="button" class="tab" data-tab="printer" role="tab">2  ·  Принтеры</button>
+        <button type="button" class="tab" data-tab="purchase" role="tab">3  ·  Закупки</button>
+        <button type="button" class="tab" data-tab="users" role="tab">4  ·  Создание/удаление пользователей</button>
+      </div>
+      <div class="pages">
+        <div class="page on" id="page-computer">
+          <h3>Типовые инциденты с компьютером</h3>
+          <p class="hint">Отметьте всё, что подходит. Комментарий — справа.</p>
+          <div class="tab-split">
+            <div class="checks" id="computer-checks"></div>
+            <label class="notes">Описание / уточнения
+              <textarea id="computer-text" rows="10"></textarea>
+            </label>
+          </div>
+        </div>
+        <div class="page" id="page-printer">
+          <h3>Типовые инциденты с принтерами</h3>
+          <p class="hint">Отметьте симптомы. Комментарий — справа.</p>
+          <div class="tab-split">
+            <div class="checks" id="printer-checks"></div>
+            <label class="notes">Описание / модель принтера, кабинет
+              <textarea id="printer-text" rows="10"></textarea>
+            </label>
+          </div>
+        </div>
+        <div class="page" id="page-purchase">
+          <h3>Закупки</h3>
+          <p class="hint">Опишите пожелания: что закупить, количество, кабинет и зачем.</p>
+          <label class="block">
+            <textarea id="purchase-text" rows="7"></textarea>
+          </label>
+        </div>
+        <div class="page" id="page-users">
+          <h3>Создание / удаление пользователей</h3>
+          <p class="hint">Логин собирается сам: первая буква имени + точка + фамилия латиницей (и.ivanov).</p>
+          <div class="radios">
+            <label><input type="radio" name="user-action" value="create" checked> Создать пользователя</label>
+            <label><input type="radio" name="user-action" value="delete"> Удалить пользователя</label>
+          </div>
+          <div class="names">
+            <label>Фамилия <input id="user-last"></label>
+            <label>Имя <input id="user-first"></label>
+            <label>Отчество <input id="user-middle"></label>
+            <label>Логин (авто) <input id="user-login" readonly></label>
+          </div>
+          <div class="tab-split">
+            <div>
+              <h4>Услуги</h4>
+              <div class="checks" id="user-checks"></div>
+            </div>
+            <label class="notes">Пояснения
+              <textarea id="user-text" rows="8"></textarea>
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <a class="csl-link" href="https://csl.by" target="_blank" rel="noopener">Разработчик: CSL  ·  CSL  ·  https://csl.by</a>
+      <a class="dl-link" href="/download/HelpCSL-web.zip">Скачать веб-версию</a>
+      <span id="ver" class="ver">v</span>
+    </footer>
+  </div>
+
+  <div id="submit-toast" class="submit-toast hidden" role="status" aria-live="polite">
+    <div class="submit-toast-card">
+      <div class="submit-toast-top">
+        <img src="/assets/icon.png" width="72" height="72" alt="">
+        <div>
+          <div class="submit-toast-name">HELP CSL</div>
+          <div class="submit-toast-slogan">Help CSL уже в пути</div>
+        </div>
+      </div>
+      <div class="submit-toast-key" id="submit-toast-key">Заявка</div>
+      <div class="submit-toast-msg">Спешим оказывать помощь</div>
+      <div class="submit-toast-bar"><span id="submit-toast-fill"></span></div>
+    </div>
+  </div>
+
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <h3 id="modal-title"></h3>
+      <div id="modal-body" class="modal-body"></div>
+      <div id="modal-actions" class="modal-actions"></div>
+    </div>
+  </div>
+
+  <script src="/static/scene.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>

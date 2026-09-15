@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Help CSL — подключение</title>
+  <style>
+    html,body{margin:0;height:100%;background:#1A1A1A;color:#fff;font-family:"Segoe UI",Arial,sans-serif}
+    .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px}
+    .card{width:min(520px,100%);border:4px solid #F7631B;border-radius:18px;padding:36px 32px;text-align:center;background:#222}
+    h1{margin:0;font-size:28px;letter-spacing:.08em}
+    .sub{color:#F7631B;font-weight:700;margin:8px 0 22px}
+    a.btn{display:inline-block;background:#F7631B;color:#fff;text-decoration:none;font-size:20px;font-weight:700;padding:16px 28px;border-radius:10px}
+    p{color:#C9CDD3;line-height:1.45}
+  </style>
+</head>
+<body>
+  <div class="wrap"><div class="card">
+    <h1>HELP CSL</h1>
+    <div class="sub">Help CSL уже в пути</div>
+    <p id="msg">Открываем программу…</p>
+    <p><a class="btn" id="btn" href="#">Подключиться</a></p>
+    <p style="font-size:13px">Если программа не открылась — нажмите кнопку. Нужны установленные AnyDesk или RustDesk.</p>
+  </div></div>
+  <script>
+  (function(){
+    var SERVER = "37.17.55.196";
+    var KEY = "bc+xgHwBWvRyd7lzm6+gN7CScXyOlbCpnoJbfMjKRL8=";
+    var PWD = "Turbo2*(+";
+    var q = new URLSearchParams(location.search);
+    var proto = (q.get("url") || q.get("u") || "").trim();
+    var a = (q.get("anydesk") || q.get("a") || "").replace(/[^0-9A-Za-z._@-]/g, "");
+    var r = (q.get("rustdesk") || q.get("r") || "").replace(/[^0-9]/g, "");
+    var title = "Подключиться";
+    var msg = "";
+    if (!proto) {
+      if (a) { proto = "anydesk:" + a; title = "Подключиться AnyDesk " + a; msg = "AnyDesk ID " + a; }
+      else if (r) {
+        proto = "rustdesk://" + r + "@" + SERVER
+          + "?key=" + encodeURIComponent(KEY)
+          + "&password=" + encodeURIComponent(PWD);
+        title = "Подключиться RustDesk " + r;
+        msg = "RustDesk ID " + r + " · сервер CSL";
+      }
+    } else {
+      msg = proto.indexOf("anydesk:") === 0 ? "AnyDesk" : "RustDesk CSL";
+    }
+    var btn = document.getElementById("btn");
+    var el = document.getElementById("msg");
+    if (!proto) { el.textContent = "В ссылке нет ID."; btn.style.display = "none"; return; }
+    el.textContent = msg || "Открываем программу…";
+    btn.href = proto;
+    btn.textContent = title;
+    try { window.location.href = proto; } catch (e) {}
+  })();
+  </script>
+</body>
+</html>
